@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void hacer(View view) {
+    public void mostrarInfo(String parrafo) {
         Intent intent = new Intent(this, MostrarActivity.class);
         intent.putExtra("parrafo", parrafo);
         startActivity(intent);
