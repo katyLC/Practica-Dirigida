@@ -10,29 +10,70 @@ import java.util.StringTokenizer;
 
 public class MainResultado extends AppCompatActivity {
 
-    TextView palabraTotal;
-    TextView palabraRandom;
+    TextView tvCantidadPalabras;
+    TextView tvPalabrasRepetidas;
+    TextView tvPalindromos;
+    TextView tvParrafo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_resultado);
 
-        Intent intent = getIntent();
-        String texto = intent.getStringExtra("texto");
-        String nume = intent.getStringExtra("ingresar");
-        palabraTotal = (TextView) findViewById(R.id.mostrarCantidad);
-        palabraRandom = (TextView) findViewById(R.id.resultadoRandon);
+        tvCantidadPalabras = findViewById(R.id.tvCantidadPalabras);
+        tvPalabrasRepetidas = findViewById(R.id.tvPalabrasRepetidas);
+        tvPalindromos = findViewById(R.id.tvPalindromos);
+        tvParrafo = findViewById(R.id.tvParrafo);
 
-        StringTokenizer tokenizer = new StringTokenizer(texto, " ");
-        palabraTotal.setText(String.valueOf(tokenizer.countTokens()));
-        String letras[] = texto.split(" ");
-        Integer randon;
-        String mostrar = " ";
-        for (int i = 0; i < Integer.parseInt(nume); i++) {
-            randon = new Random().nextInt(letras.length);
-            mostrar += letras[randon] + " ";
+        Intent intent = getIntent();
+        String parrafo = intent.getStringExtra("parrafo");
+
+        tvCantidadPalabras.setText(String.valueOf(calcularCantidadPalabras(parrafo)));
+
+        cantidadVecesRepite(parrafo.split(" "));
+        palindromo(parrafo.split(" "));
+
+        tvParrafo.setText(parrafo);
+    }
+
+    public int calcularCantidadPalabras(String parrafo) {
+        String[] cantPalabras = parrafo.split(" ");
+        return cantPalabras.length;
+    }
+
+    public void cantidadVecesRepite(String[] parrafo) {
+        HashMap<String, Integer> palabras = new HashMap<>();
+        for (String palabra : parrafo) {
+            palabras.put(palabra, palabras.containsKey(palabra) ? palabras.get(palabra) + 1 : 1);
         }
-        palabraRandom.setText(mostrar);
+        for (Map.Entry<String, Integer> entry : palabras.entrySet()) {
+            tvPalabrasRepetidas.setText(tvPalabrasRepetidas.getText() + "\n" + entry.getKey() + ": " + entry.getValue());
+        }
+    }
+
+    public void palindromo(String[] parrafo) {
+        HashMap<String, String> palabras = new HashMap<>();
+        for (String palabra : parrafo) {
+            int inicio = 0;
+            int fin = palabra.length() - 1;
+            boolean fallo = false;
+
+            while ((inicio < fin)) {
+                if (palabra.toLowerCase().charAt(inicio) == palabra.toLowerCase().charAt(fin)) {
+                    inicio++;
+                    fin--;
+                } else {
+                    fallo = true;
+                    break;
+                }
+            }
+
+            palabras.put(palabra, fallo ? "NO" : "SI");
+        }
+
+        for (Map.Entry<String, String> entry : palabras.entrySet()) {
+            tvPalindromos.setText(tvPalindromos.getText() + "\n" + entry.getKey() + ": " + entry.getValue());
+        }
+
     }
 }

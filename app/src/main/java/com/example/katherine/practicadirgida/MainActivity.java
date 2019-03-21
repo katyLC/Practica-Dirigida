@@ -12,32 +12,36 @@ import java.util.Random;
 import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity {
-    EditText texto;
-    EditText editText;
-    EditText ingresar;
-    TextView mostrarR;
 
+    EditText parrafo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        texto = (EditText) findViewById(R.id.edit_text);
 
-        ingresar = (EditText) findViewById(R.id.ingresar);
+        parrafo = findViewById(R.id.edtParrafo);
+        Button mostrar = findViewById(R.id.btnMostrar);
+
+        mostrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (parrafo.getText() != null && parrafo.getText().length() > 0) {
+                    mostrarInfo(String.valueOf(parrafo.getText()));
+                } else {
+                    Toast.makeText(getApplicationContext(), "Debe ingresar por lo menos un valor",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     }
 
 
     public void hacer(View view) {
-        Intent intent = new Intent(this, MainResultado.class);
-
-        String tex = texto.getText().toString();
-        String num = ingresar.getText().toString();
-        intent.putExtra("texto", tex);
-        intent.putExtra("ingresar", num);
+        Intent intent = new Intent(this, MostrarActivity.class);
+        intent.putExtra("parrafo", parrafo);
         startActivity(intent);
-
     }
 }
 
